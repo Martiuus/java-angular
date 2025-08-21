@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Cuenta } from '../../models/cuenta.model';
 import { Cliente } from '../../models/cliente.model';
 import { CuentaService } from '../../services/cuenta.service';
-import { TransferenciaService } from '../../services/transferencia.service';
+import { TransferenciaService, TransferenciaRequest } from '../../services/transferencia.service';
 import { AuthService } from '../../services/auth';
 
 @Component({
@@ -17,7 +17,6 @@ import { AuthService } from '../../services/auth';
 export class TransferenciaPageComponent implements OnInit {
 
   cuentasOrigen: Cuenta[] = [];
-  todasLasCuentas: Cuenta[] = [];
   transferenciaForm: FormGroup;
   mensajeExito: string | null = null;
   mensajeError: string | null = null;
@@ -31,7 +30,7 @@ export class TransferenciaPageComponent implements OnInit {
   ) {
     this.transferenciaForm = this.fb.group({
       idCuentaOrigen: ['', Validators.required],
-      idCuentaDestino: ['', Validators.required],
+      numeroCuentaDestino: ['', Validators.required],
       monto: ['', [Validators.required, Validators.min(0.01)]]
     });
   }
@@ -43,18 +42,16 @@ export class TransferenciaPageComponent implements OnInit {
         this.cargarCuentasOrigen(user.id);
       }
     });
-    this.cargarTodasLasCuentas();
   }
 
   cargarCuentasOrigen(clienteId: number): void {
     this.cuentaService.getCuentasByClienteId(clienteId).subscribe(data => {
       this.cuentasOrigen = data;
-    });
-  }
-
-  cargarTodasLasCuentas(): void {
-    this.cuentaService.getCuentas().subscribe(data => {
-      this.todasLasCuentas = data;
+      // --- CAMBIO AQUÍ ---
+      // Si hay cuentas, seleccionamos la primera por defecto.
+      if (data.length > 0) {
+        this.transferenciaForm.patchValue({ idCuentaOrigen: data[0].id });
+      }
     });
   }
 
@@ -63,18 +60,22 @@ export class TransferenciaPageComponent implements OnInit {
       this.mensajeError = 'Por favor, completa todos los campos correctamente.';
       return;
     }
-    if (this.transferenciaForm.value.idCuentaOrigen === this.transferenciaForm.value.idCuentaDestino) {
-        this.mensajeError = 'La cuenta de origen y destino no pueden ser la misma.';
-        return;
+
+    const request: TransferenciaRequest = this.transferenciaForm.value;
+
+    const cuentaOrigenSeleccionada = this.cuentasOrigen.find(c => c.id === +request.idCuentaOrigen);
+    if (cuentaOrigenSeleccionada && cuentaOrigenSeleccionada.numeroCuenta === request.numeroCuentaDestino) {
+      this.mensajeError = 'La cuenta de origen y destino no pueden ser la misma.';
+      return;
     }
 
     this.mensajeExito = null;
     this.mensajeError = null;
 
-    this.transferenciaService.realizarTransferencia(this.transferenciaForm.value)
+    this.transferenciaService.realizarTransferencia(request)
       .subscribe({
         next: () => {
-          this.mensajeExito = `Transferencia de S/${this.transferenciaForm.value.monto} realizada con éxito!`;
+          this.mensajeExito = `Transferencia de S/${request.monto} realizada con éxito!`;
           this.transferenciaForm.reset();
           if (this.clienteActual) {
             this.cargarCuentasOrigen(this.clienteActual.id);

@@ -13,17 +13,16 @@
           </option>
         </select>
       </div>
+
       <div class="mb-3">
         <label for="cuentaDestino" class="form-label">Hacia la cuenta:</label>
-        <select id="cuentaDestino" class="form-select" formControlName="idCuentaDestino">
-          <option value="" disabled>Selecciona una cuenta de destino</option>
-          <option *ngFor="let cuenta of todasLasCuentas" [value]="cuenta.id">
-            {{ cuenta.numeroCuenta }} (Titular: {{ cuenta.cliente.nombre }} {{ cuenta.cliente.apellido }})
-          </option>
-        </select>
+        <!-- Asegúrate de que esta línea no tenga un </input> después -->
+        <input type="text" id="cuentaDestino" class="form-control" formControlName="numeroCuentaDestino" placeholder="Ej: 111-222-333001">
       </div>
+
       <div class="mb-3">
         <label for="monto" class="form-label">Monto a transferir:</label>
+        <!-- Y que esta tampoco lo tenga -->
         <input type="number" id="monto" class="form-control" formControlName="monto" placeholder="0.00">
       </div>
       <button type="submit" class="btn btn-primary" [disabled]="transferenciaForm.invalid">Transferir</button>
