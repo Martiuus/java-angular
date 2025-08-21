@@ -1,0 +1,40 @@
+<div class="form-container">
+  <h3>Realizar una Transferencia</h3>
+
+  <form [formGroup]="transferenciaForm" (ngSubmit)="onSubmit()">
+
+    <!-- Campo Cuenta de Origen -->
+    <div class="form-group">
+      <label for="cuentaOrigen">Desde la cuenta:</label>
+      <select id="cuentaOrigen" formControlName="idCuentaOrigen">
+        <option value="" disabled>Selecciona una cuenta de origen</option>
+        <option *ngFor="let cuenta of cuentasOrigen" [value]="cuenta.id">
+          {{ cuenta.numeroCuenta }} ({{ cuenta.tipoCuenta }} - Saldo: {{ cuenta.saldo | currency:'S/' }})
+        </option>
+      </select>
+    </div>
+
+    <!-- Campo Cuenta de Destino -->
+    <div class="form-group">
+      <label for="cuentaDestino">Hacia la cuenta:</label>
+      <select id="cuentaDestino" formControlName="idCuentaDestino">
+        <option value="" disabled>Selecciona una cuenta de destino</option>
+        <option *ngFor="let cuenta of todasLasCuentas" [value]="cuenta.id">
+          {{ cuenta.numeroCuenta }} (Titular: {{ cuenta.cliente.nombre }} {{ cuenta.cliente.apellido }})
+        </option>
+      </select>
+    </div>
+
+    <!-- Campo Monto -->
+    <div class="form-group">
+      <label for="monto">Monto a transferir:</label>
+      <input type="number" id="monto" formControlName="monto" placeholder="0.00">
+    </div>
+
+    <button type="submit" [disabled]="transferenciaForm.invalid">Transferir</button>
+  </form>
+
+  <!-- Mensajes de éxito o error -->
+  <div *ngIf="mensajeExito" class="mensaje exito">{{ mensajeExito }}</div>
+  <div *ngIf="mensajeError" class="mensaje error">{{ mensajeError }}</div>
+</div>

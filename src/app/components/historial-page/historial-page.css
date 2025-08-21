@@ -1,0 +1,46 @@
+.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  margin-top: 0;
+  color: #003366;
+}
+
+.loading {
+  color: #666;
+  font-style: italic;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+thead {
+  background-color: #f7f7f7;
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+tr.enviado td.monto {
+  color: #d93025; /* Rojo para transferencias enviadas */
+}
+
+tr.recibido td.monto {
+  color: #1e8e3e; /* Verde para transferencias recibidas */
+}
+
+td.monto {
+  font-weight: bold;
+  text-align: right;
+}

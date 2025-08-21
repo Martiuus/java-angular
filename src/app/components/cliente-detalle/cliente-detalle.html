@@ -1,0 +1,53 @@
+<div class="container">
+  <!-- Botón para volver a la lista de clientes -->
+  <a routerLink="/clientes" class="back-button">&larr; Volver a la lista</a>
+
+  <!-- Mensaje de carga -->
+  <div *ngIf="isLoading" class="loading">Cargando datos del cliente...</div>
+
+  <!-- Contenido principal que se muestra cuando la carga ha terminado -->
+  <div *ngIf="!isLoading && cliente">
+
+    <!-- Sección de Información del Cliente -->
+    <div class="card">
+      <h2>Información del Cliente</h2>
+      <p><strong>Nombre:</strong> {{ cliente.nombre }} {{ cliente.apellido }}</p>
+      <p><strong>Email:</strong> {{ cliente.email }}</p>
+      <p><strong>Teléfono:</strong> {{ cliente.telefono }}</p>
+    </div>
+
+    <!-- Sección de Cuentas Bancarias -->
+    <div class="card">
+      <h2>Cuentas Bancarias</h2>
+      <div *ngIf="cuentas.length > 0; else noCuentas">
+        <table>
+          <thead>
+          <tr>
+            <th>Número de Cuenta</th>
+            <th>Tipo</th>
+            <th>Saldo</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let cuenta of cuentas">
+            <td>{{ cuenta.numeroCuenta }}</td>
+            <td>{{ cuenta.tipoCuenta }}</td>
+            <td>{{ cuenta.saldo | currency:'S/':'symbol':'1.2-2' }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Mensaje que se muestra si no hay cuentas -->
+      <ng-template #noCuentas>
+        <p>Este cliente no tiene cuentas registradas.</p>
+      </ng-template>
+    </div>
+
+    <!-- Sección para el Formulario de Transferencias -->
+    <div class="card">
+      <app-transferencia-form [cuentasOrigen]="cuentas"></app-transferencia-form>
+    </div>
+
+  </div> <!-- Cierre del div *ngIf -->
+
+</div> <!-- Cierre del div .container -->

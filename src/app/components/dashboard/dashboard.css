@@ -1,0 +1,13 @@
+/* ... (estilos existentes) ... */
+
+tr.enviado td {
+  color: #d93025; /* Rojo para transferencias enviadas */
+}
+
+tr.recibido td {
+  color: #1e8e3e; /* Verde para transferencias recibidas */
+}
+
+td.monto {
+  font-weight: bold;
+}

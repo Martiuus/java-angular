@@ -1,0 +1,35 @@
+<div *ngIf="cliente">
+  <h1 class="mb-4">Bienvenido de nuevo, {{ cliente.nombre }}</h1>
+</div>
+
+<div class="card mb-4">
+  <div class="card-header">
+    <h5 class="mb-0">Tus Cuentas</h5>
+  </div>
+  <div class="card-body">
+    <div *ngIf="isLoading" class="text-center text-muted">Cargando cuentas...</div>
+    <div *ngIf="!isLoading && cuentas.length > 0; else noCuentas">
+      <table class="table table-hover mb-0">
+        <thead>
+        <tr>
+          <th>Número de Cuenta</th>
+          <th>Tipo</th>
+          <th class="text-end">Saldo</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let cuenta of cuentas">
+          <td>{{ cuenta.numeroCuenta }}</td>
+          <td>{{ cuenta.tipoCuenta }}</td>
+          <td class="text-end fw-bold">{{ cuenta.saldo | currency:'S/':'symbol':'1.2-2' }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-template #noCuentas>
+      <p *ngIf="!isLoading" class="text-muted">No tienes cuentas registradas.</p>
+    </ng-template>
+  </div>
+</div>
+
+<router-outlet></router-outlet>

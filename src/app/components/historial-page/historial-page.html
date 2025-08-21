@@ -1,0 +1,39 @@
+<div class="card mt-4">
+  <div class="card-header">
+    <h5 class="mb-0">Historial de Movimientos</h5>
+  </div>
+  <div class="card-body">
+    <div *ngIf="isLoading" class="text-center text-muted">Cargando historial...</div>
+    <div *ngIf="!isLoading && historial.length > 0; else noMovimientos">
+      <table class="table table-striped mb-0">
+        <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Descripción</th>
+          <th class="text-end">Monto</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let t of historial">
+          <td>{{ t.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>
+                            <span *ngIf="t.cuentaOrigen.cliente.id === clienteActual?.id">
+                                Transferencia enviada a {{ t.cuentaDestino.cliente.nombre }} {{ t.cuentaDestino.cliente.apellido }}
+                            </span>
+            <span *ngIf="t.cuentaDestino.cliente.id === clienteActual?.id">
+                                Transferencia recibida de {{ t.cuentaOrigen.cliente.nombre }} {{ t.cuentaOrigen.cliente.apellido }}
+                            </span>
+          </td>
+          <td class="text-end fw-bold" [ngClass]="{'text-danger': t.cuentaOrigen.cliente.id === clienteActual?.id, 'text-success': t.cuentaDestino.cliente.id === clienteActual?.id}">
+            <span *ngIf="t.cuentaOrigen.cliente.id === clienteActual?.id">- {{ t.monto | currency:'S/' }}</span>
+            <span *ngIf="t.cuentaDestino.cliente.id === clienteActual?.id">+ {{ t.monto | currency:'S/' }}</span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-template #noMovimientos>
+      <p *ngIf="!isLoading" class="text-muted">No tienes movimientos recientes.</p>
+    </ng-template>
+  </div>
+</div>
